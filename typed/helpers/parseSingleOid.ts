@@ -3,10 +3,6 @@ export function parseSingleOid(oid: string | number[]) {
         return oid;
     }
 
-    if (oid[0] !== '.') {
-        throw new Error('Invalid OID format');
-    }
-
     oid = oid.split('.')
         .filter(function (s) {
             return s.length > 0;
