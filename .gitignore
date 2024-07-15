@@ -4,3 +4,4 @@ node_modules
 lib-cov
 dist
 .npmrc
+testes.ts
