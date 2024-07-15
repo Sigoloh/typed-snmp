@@ -378,7 +378,9 @@ export class Session extends EventEmitter{
                     })
                 } else {
                     varbinds.forEach(varbind => {
-                        result.push(varbind as unknown as Type)
+                        if(varbind.type !== asn1ber.types.Null){
+                            result.push(varbind as unknown as Type)
+                        }
                     })
                 }
             }
