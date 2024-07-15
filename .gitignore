@@ -3,3 +3,4 @@ gmon.out
 node_modules
 lib-cov
 dist
+.npmrc

@@ -1,7 +1,7 @@
 {
-  "name": "snmp-native",
-  "description": "A native Javascript SNMP implementation for Node.js",
-  "author": "Jakob Borg <jakob@nym.se> (http://nym.se/)",
+  "name": "typed-snmp-native",
+  "description": "A native Javascript SNMP implementation for Node.js in Typescript",
+  "author": "Augusto Sigolo <augustoasigolo@gmail.com>",
   "keywords": [
     "snmp",
     "asn.1",
@@ -13,6 +13,17 @@
   "version": "1.3.0",
   "license": "MIT",
   "main": "dist/index.js",
+  "contributors": [
+    {
+      "name": "Jakob Borg",
+      "email": "jakob@nym.se",
+      "description": "Original developer of snmp-native"
+    },
+    {
+      "name": "Augusto Sigolo",
+      "email": "augustoasigolo@gmail.com"
+    }
+  ],
   "scripts": {
     "build": "npx tsc && cp -r ./lib ./dist/lib"
   },
@@ -22,10 +33,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/calmh/node-snmp-native.git"
+    "url": "git@github.com:Sigoloh/typed-snmp.git"
   },
   "bugs": {
-    "url": "http://github.com/calmh/node-snmp-native/issues",
-    "email": "snmp@nym.se"
+    "url": "https://github.com/Sigoloh/typed-snmp/issues",
+    "email": "augustoasigolo@gmail.com"
   }
 }
