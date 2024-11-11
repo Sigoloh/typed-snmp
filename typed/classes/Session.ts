@@ -12,6 +12,7 @@ import { parseOids } from "../helpers/parseOids";
 import * as  asn1ber from "../../lib/asn1ber";
 import { compareOids } from "../helpers/compareOids";
 import { PacketFactory, PDUFactory, VarBindFactory } from "./PacketFactory";
+import { SetRequest } from "../types/SetRequest.type";
 
 export class Session extends EventEmitter{
     private _options: Required<SessionOption> = {...defaultOptions};
@@ -80,7 +81,7 @@ export class Session extends EventEmitter{
         return ((now & 0x1fffff) << 10) + this.counter;
     };
 
-    sendMsg(pkt: Packet, options: {oid: number[] | string}, callback: (err?:any, varbinds?: VarBind[]) => any) {
+    sendMsg(pkt: Packet, options: {oid: number[] | string} | (SessionOption | undefined), callback: (err?:any, varbinds?: VarBind[]) => any) {
         let buf: Buffer;
         let reqid: number;
         let retrans = 0;
@@ -145,14 +146,20 @@ export class Session extends EventEmitter{
         this.sendMsg(pkt, options, callback);
     };
 
-    set(options: {oid: number[] | string, value: number | Buffer | string | number[], type: number}, callback: (err?: any, varbinds?: VarBind[]) => any) {
+    set(
+        options: {
+            requests: SetRequest | SetRequest[]
+            requestOptions?: Partial<SessionOption>,
+        },
+        callback: (err?: any, varbinds?: VarBind[]) => any
+    ) {
         let pkt = (new PacketFactory()).create();
 
         let completeOptions: {oid: number[] | string, value: number | Buffer | string | number[], type: number} & Required<SessionOption> = options as  unknown as any;
 
-        defaults(completeOptions, this._options);
+        const ensuredRequestArray = Array.isArray(options.requests) ? options.requests : [options.requests];
 
-        parseOids(completeOptions);
+        defaults(completeOptions, this._options);
 
         if (!completeOptions.oid) {
             throw new Error('Missing required option `oid`.');
@@ -164,10 +171,16 @@ export class Session extends EventEmitter{
         pkt.community = completeOptions.community;
         pkt.version = completeOptions.version;
         pkt.pdu.type = asn1ber.pduTypes.SetRequestPDU;
-        pkt.pdu.varbinds[0].oid = completeOptions.oid;
-        pkt.pdu.varbinds[0].type = completeOptions.type;
-        pkt.pdu.varbinds[0].value = completeOptions.value;
-        this.sendMsg(pkt, options, callback);
+
+        for(let i = 0; i < ensuredRequestArray.length; i++){
+            parseOids(ensuredRequestArray[i].oid);
+            pkt.pdu.varbinds[i].oid = ensuredRequestArray[i].oid;
+            pkt.pdu.varbinds[i].type = ensuredRequestArray[i].type;
+            pkt.pdu.varbinds[i].value = ensuredRequestArray[i].value;   
+        }
+        setTimeout(() => {
+            this.sendMsg(pkt, completeOptions, callback);
+        }, completeOptions.setWakeUpTimeout)
     };
 
     getAll(options: {oids: number[][] | string, abortOnError: boolean, combinedTimeout: number}, callback: (err?:any, varbinds?: VarBind[]) => any) {

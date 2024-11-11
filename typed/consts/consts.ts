@@ -12,5 +12,6 @@ export const defaultOptions = {
     community: 'public',
     family: 'udp4',
     timeouts: [ 5000, 5000, 5000, 5000 ],
-    version: versions.SNMPv2c
+    version: versions.SNMPv2c,
+    setWakeUpTimeout: 0
 } as Required<SessionOption>;

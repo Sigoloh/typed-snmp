@@ -2,6 +2,7 @@ import { SessionOption } from "../types/SessionOption";
 import { Session } from "./Session";
 import { defaultOptions } from "../consts/consts";
 import { VarBind } from "../types/VarBind";
+import { SetRequest } from "../types/SetRequest.type";
 
 export class AsyncSession{
     private _options: Required<SessionOption> = {...defaultOptions};
@@ -32,7 +33,12 @@ export class AsyncSession{
         })
     } 
 
-    async set(options: {oid: number[] | string, value: number | Buffer | string | number[], type: number}): Promise<VarBind[]>{
+    async set(
+        options: {
+            requestOptions?: Partial<SessionOption>,
+            requests: SetRequest | SetRequest[]
+        }
+    ): Promise<VarBind[]>{
         return new Promise((resolve, reject) => {
             this.session.set(options, (err?: any, varbinds?: VarBind[]) => {
                 if(err){

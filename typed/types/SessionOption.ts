@@ -6,5 +6,6 @@ export type SessionOption = {
     family?: "udp4" | "udp6",
     timeouts?: number[],
     version?: number,
+    setWakeUpTimeout?: number,
     msgReceived?:  (msg: Buffer, rinfo: any) => any
 }
