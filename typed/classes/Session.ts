@@ -161,11 +161,16 @@ export class Session extends EventEmitter{
 
         defaults(completeOptions, this._options);
 
-        if (!completeOptions.oid) {
+        const atLeastOneRequest = ensuredRequestArray[0];
+
+        if(!atLeastOneRequest){
+            throw new Error('Missing required `requests`.');
+        }
+        if (!atLeastOneRequest.oid) {
             throw new Error('Missing required option `oid`.');
-        } else if (completeOptions.value === undefined) {
+        } else if (atLeastOneRequest.value === undefined) {
             throw new Error('Missing required option `value`.');
-        } else if (!completeOptions.type) {
+        } else if (!atLeastOneRequest.type) {
             throw new Error('Missing required option `type`.');
         }
         pkt.community = completeOptions.community;
