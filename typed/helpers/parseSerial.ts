@@ -10,6 +10,5 @@ export function parseSerial(raw: number[]): string{
         serialNo += item.toString(16).toUpperCase().padStart(2, "0");
     });
 
-    console.log({ serialDecode: serialNo });
     return serialNo;
 }

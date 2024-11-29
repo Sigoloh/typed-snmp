@@ -13,6 +13,7 @@ import * as  asn1ber from "../../lib/asn1ber";
 import { compareOids } from "../helpers/compareOids";
 import { PacketFactory, PDUFactory, VarBindFactory } from "./PacketFactory";
 import { SetRequest } from "../types/SetRequest.type";
+import { parse } from "../helpers/parse";
 
 export class Session extends EventEmitter{
     private _options: Required<SessionOption> = {...defaultOptions};
@@ -178,7 +179,7 @@ export class Session extends EventEmitter{
         pkt.pdu.type = asn1ber.pduTypes.SetRequestPDU;
 
         for(let i = 0; i < ensuredRequestArray.length; i++){
-            parseOids(ensuredRequestArray[i].oid);
+            parseOids(ensuredRequestArray[i]);
             pkt.pdu.varbinds[i].oid = ensuredRequestArray[i].oid;
             pkt.pdu.varbinds[i].type = ensuredRequestArray[i].type;
             pkt.pdu.varbinds[i].value = ensuredRequestArray[i].value;   
